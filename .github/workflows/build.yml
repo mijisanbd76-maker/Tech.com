@@ -10,10 +10,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Unzip project
         run: unzip -q TechCom.zip
-      - name: Fix Kotlin version
+      - name: Fix versions and imports
         run: |
           sed -i 's/1\.9\.24/2.2.0/' TechCom/build.gradle.kts
           sed -i '/kotlinOptions/d' TechCom/app/build.gradle.kts
+          sed -i 's/com\.pedro\.library\.util\.sources/com.pedro.encoder.input.sources/' TechCom/app/src/main/java/com/techcom/live/Engine.kt
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '17' }
       - uses: gradle/actions/setup-gradle@v4
