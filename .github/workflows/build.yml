@@ -12,9 +12,12 @@ jobs:
         run: unzip -q TechCom.zip
       - name: Fix versions and imports
         run: |
+          E=TechCom/app/src/main/java/com/techcom/live/Engine.kt
           sed -i 's/1\.9\.24/2.2.0/' TechCom/build.gradle.kts
           sed -i '/kotlinOptions/d' TechCom/app/build.gradle.kts
-          sed -i 's/com\.pedro\.library\.util\.sources/com.pedro.encoder.input.sources/' TechCom/app/src/main/java/com/techcom/live/Engine.kt
+          sed -i 's/com\.pedro\.library\.util\.sources/com.pedro.encoder.input.sources/' $E
+          sed -i 's/val v = VideoFileSource(); val a = AudioFileSource()/val v = VideoFileSource(app, uri); val a = AudioFileSource(app, uri)/' $E
+          sed -i 's/VideoFileSource()/VideoFileSource(app, android.net.Uri.EMPTY)/g; s/AudioFileSource()/AudioFileSource(app, android.net.Uri.EMPTY)/g' $E
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '17' }
       - uses: gradle/actions/setup-gradle@v4
