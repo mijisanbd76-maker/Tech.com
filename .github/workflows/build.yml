@@ -17,7 +17,9 @@ jobs:
           sed -i '/kotlinOptions/d' TechCom/app/build.gradle.kts
           sed -i 's/com\.pedro\.library\.util\.sources/com.pedro.encoder.input.sources/' $E
           sed -i 's/val v = VideoFileSource(); val a = AudioFileSource()/val v = VideoFileSource(app, uri); val a = AudioFileSource(app, uri)/' $E
-          sed -i 's/VideoFileSource()/VideoFileSource(app, android.net.Uri.EMPTY)/g; s/AudioFileSource()/AudioFileSource(app, android.net.Uri.EMPTY)/g' $E
+          sed -i 's/VideoFileSource()/VideoFileSource(app, pendingUri)/g; s/AudioFileSource()/AudioFileSource(app, pendingUri)/g' $E
+          sed -i 's/private var stream: GenericStream? = null/private var stream: GenericStream? = null\n    private var pendingUri: Uri = Uri.EMPTY/' $E
+          sed -i 's/val err = prepare(p.cfg, mp)/pendingUri = p.playlist.firstOrNull()?.let { Uri.parse(it.uri) } ?: Uri.EMPTY\n        val err = prepare(p.cfg, mp)/' $E
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '17' }
       - uses: gradle/actions/setup-gradle@v4
